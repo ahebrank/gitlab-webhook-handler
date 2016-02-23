@@ -8,14 +8,13 @@ import subprocess
 import requests
 import ipaddress
 from flask import Flask, request, abort
+import argparse
 
 app = Flask(__name__)
 app.debug = os.environ.get('DEBUG') == 'true'
 
-# The repos.json file should be readable by the user running the Flask app,
-# and the absolute path should be given by this environment variable.
-REPOS_JSON_PATH = os.environ['GWH_REPOS_JSON']
-
+REPOS_JSON_PATH = None
+WHITELIST_IP = None
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -25,16 +24,9 @@ def index():
         # Store the IP address of the requester
         request_ip = ipaddress.ip_address(u'{0}'.format(request.remote_addr))
 
-        # validate against an IP range
-        if os.environ.get('GWH_ADDRESS', None):
-            hook_blocks = [os.environ.get('GWH_ADDRESS')]
-        # Otherwise get the hook address blocks from the API.
-        else:
-            hook_blocks = None
-
         # Check if the POST request is from github.com or GHE
-        if not hook_blocks is None:
-            for block in hook_blocks:
+        if not WHITELIST_IP is None:
+            for block in [WHITELIST_IP]:
                 if ipaddress.ip_address(request_ip) in ipaddress.ip_network(block):
                     break  # the remote_addr is within the network range of github.
             else:
@@ -65,14 +57,25 @@ def index():
 
         if repo.get('action', None):
             for action in repo['action']:
-                subp = subprocess.Popen(action, cwd=repo.get('path', '.'))
-                subp.wait()
+                try:
+                    subp = subprocess.Popen(action, cwd=repo.get('path', '.'), shell=True)
+                    subp.wait()
+                except Exception as e:
+                    print e
         return 'OK'
 
 
 if __name__ == "__main__":
-    try:
-        port_number = int(sys.argv[1])
-    except:
-        port_number = 8080
+
+    parser = argparse.ArgumentParser(description='gitlab webhook receiver')
+    parser.add_argument('-c', '--config', action='store', help='path to repos.json', required=True)
+    parser.add_argument('--ip', action='store', help='restrict to IP block', required=False)
+    parser.add_argument('-p', '--port', action='store', help='server port', required=False, default=8080)
+    args = parser.parse_args()
+
+    port_number = int(args.port)
+
+    REPOS_JSON_PATH = args.config
+    WHITELIST_IP = args.ip
+
     app.run(host='0.0.0.0', port=port_number)
