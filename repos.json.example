@@ -1,5 +1,9 @@
 {
-    "razius/puppet": {
-        "path": "/home/puppet"
+    "https://gitlab.com/pal/spm-batching/branch:master": {
+        "path": "/home/puppet",
+        "action": [
+          "git checkout master",
+          "git pull"
+        ]
     }
 }

@@ -1,4 +1,5 @@
-Copyright 2014 Silviu Tantos <me@razius.com>
+Original Github version (https://github.com/razius/github-webhook-handler) Copyright 2014 Silviu Tantos <me@razius.com>
+Modified for Gitlab 2016 by Andy Hebrank <ahebrank@gmail.com>
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
