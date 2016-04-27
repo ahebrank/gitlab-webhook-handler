@@ -34,10 +34,14 @@ Create a JSON config file (e.g., `repos.json`) to configure repositories. Each r
 python gwh.py --help
 ```
 
-For example, on host example.com:
+## Example usage:
+
+Assume a self-hosted Gitlab server on 192.168.1.44 and a production webserver on 192.168.1.99.  The idea is that a push to the master branch for your project should trigger the production machine to pull in a new copy of the repo.
+
+On your webhost (192.168.1.99), bring up the webhook handler:
 
 ```
 python gwh.py -c repos.json -p 8080 --allow 192.168.1.44 &
 ```
 
-Then in your Gitlab project settings, create a new webhook with URL http://example.com:8080 that's triggered on push events.
+Then in your Gitlab server (on 192.168.1.44) project settings, create a new webhook with URL http://192.168.1.99:8080 that's triggered on push events.
