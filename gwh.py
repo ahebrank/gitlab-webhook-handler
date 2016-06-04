@@ -70,12 +70,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='gitlab webhook receiver')
     parser.add_argument('-c', '--config', action='store', help='path to repos configuration', required=True)
     parser.add_argument('-p', '--port', action='store', help='server port', required=False, default=8080)
-    parser.add_argument('--allow', action='store', help='whitelist Gitlab IP block', required=False)
+    parser.add_argument('--allow', action='store', help='whitelist Gitlab IP block', required=False, default=None)
     args = parser.parse_args()
 
     port_number = int(args.port)
 
     REPOS_JSON_PATH = args.config
-    WHITELIST_IP = args.ip
+    WHITELIST_IP = args.allow
 
     app.run(host='0.0.0.0', port=port_number)
