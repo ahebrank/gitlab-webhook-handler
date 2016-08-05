@@ -5,5 +5,9 @@
           "git checkout master",
           "git pull"
         ]
+    },
+    "http://example.com/mike/diaspora/branch:master": {
+    	"path": "/",
+    	"action": ["echo SOME GIT OPERATION"]
     }
 }

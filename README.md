@@ -45,3 +45,7 @@ python gwh.py -c repos.json -p 8080 --allow 192.168.1.44 &
 ```
 
 Then in your Gitlab server (on 192.168.1.44) project settings, create a new webhook with URL http://192.168.1.99:8080 that's triggered on push events.
+
+## Test
+
+	curl -i -X POST -H "Content-Type: application/json" --data "@test.json" localhost:808
