@@ -54,14 +54,17 @@ def index():
             if not repo:
                 repo = repos.get('{homepage}'.format(**repo_meta), None)
 
+        if repo:
+            if repo.get('action', None):
+                for action in repo['action']:
+                    try:
+                        subp = subprocess.Popen(action, cwd=repo.get('path', '.'), shell=True)
+                        subp.wait()
+                    except Exception as e:
+                        print e
+        else:
+            return "Nothing to do for " + str(repo_meta)
 
-        if repo.get('action', None):
-            for action in repo['action']:
-                try:
-                    subp = subprocess.Popen(action, cwd=repo.get('path', '.'), shell=True)
-                    subp.wait()
-                except Exception as e:
-                    print e
         return 'OK'
 
 
