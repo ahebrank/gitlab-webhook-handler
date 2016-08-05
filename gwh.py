@@ -76,6 +76,7 @@ if __name__ == "__main__":
     port_number = int(args.port)
 
     REPOS_JSON_PATH = args.config
-    WHITELIST_IP = unicode(args.allow, "utf-8")
+    if args.allow:
+        WHITELIST_IP = unicode(args.allow, "utf-8")
 
     app.run(host='0.0.0.0', port=port_number)
