@@ -1,0 +1,58 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          gwh
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Run gitlab webhook handler
+# Description:       Run the gitlab webhook handler as a service
+### END INIT INFO
+
+# Change the following to the location of the gitlab-webhook-handler directory
+DIR=/root/gitlab-webhook-handler
+
+DAEMON="/usr/bin/python $DIR/gwh.py"
+DAEMON_NAME=gwh
+
+# Add any command line options for your daemon here
+DAEMON_OPTS="-c $DIR/repos.json"
+
+# This next line determines what user the script runs as.
+# Root generally not recommended.
+DAEMON_USER=root
+
+# The process ID of the script when it runs is stored here:
+PIDFILE=/var/run/$DAEMON_NAME.pid
+LOG=/var/log/$DAEMON_NAME.log
+
+do_start () {
+    echo "Starting $DAEMON_NAME"
+    start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile \
+      --user $DAEMON_USER --chuid $DAEMON_USER \
+      --startas /bin/bash -- -c "exec $DAEMON $DAEMON_OPTS > $LOG 2>&1"
+}
+do_stop () {
+    echo "Stopping $DAEMON_NAME"
+    start-stop-daemon --stop --pidfile $PIDFILE --retry 10
+}
+
+case "$1" in
+
+    start|stop)
+        do_${1}
+        ;;
+
+    restart|reload|force-reload)
+        do_stop
+        do_start
+        ;;
+
+    *)
+        echo "Usage: /etc/init.d/$DAEMON_NAME {start|stop|restart}"
+        exit 1
+        ;;
+
+esac
+exit 0
