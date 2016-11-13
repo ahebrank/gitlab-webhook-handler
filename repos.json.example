@@ -10,7 +10,7 @@
             }
         },
         "issue": {
-            "user_notify": "\*\*Sender\*\*\: (^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+            "user_notify": "\\*\\*Sender\\*\\*\\: ([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)"
         }
     }
 }

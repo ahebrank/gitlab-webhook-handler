@@ -38,7 +38,7 @@ Create a JSON config file (e.g., `repos.json`) to configure repositories. Each r
         }
         },
         "issue": {
-            "user_notify": "\*\*Sender\*\*\: (^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+            "user_notify": "\\*\\*Sender\\*\\*\\: ([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)"
         }
     }
 }
