@@ -1,13 +1,16 @@
 {
-    "https://gitlab.com/pal/spm-batching/branch:master": {
-        "path": "/home/puppet",
-        "action": [
-          "git checkout master",
-          "git pull"
-        ]
-    },
-    "http://example.com/mike/diaspora/branch:master": {
-    	"path": "/",
-    	"action": ["echo SOME GIT OPERATION"]
+    "https://gitlab.com/pal/spm-batching": {
+        "push": {
+            "master": {
+                "path": "/home/puppet",
+                "action": [
+                  "git checkout master",
+                  "git pull"
+                ]
+            }
+        },
+        "issue": {
+            "user_notify": "\*\*Sender\*\*\: (^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+        }
     }
 }
