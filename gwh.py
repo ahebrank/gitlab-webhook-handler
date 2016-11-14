@@ -25,7 +25,7 @@ def index():
         # Store the IP address of the requester
         request_ip = ipaddress.ip_address(u'{0}'.format(request.remote_addr))
 
-        # Check if the POST request is from github.com or GHE
+        # Check the POST source
         if not WHITELIST_IP is None:
             for block in [WHITELIST_IP]:
                 if ipaddress.ip_address(request_ip) in ipaddress.ip_network(block):
@@ -76,16 +76,32 @@ def index():
             if issue:
                 # notification for new issue
                 if issue.get("user_notify", None) and payload['object_attributes']['action'] == "open":
+                    if not private_token:
+                        abort(403)
+                    gl = GitlabApi(repo_meta['homepage'], private_token)
+                    notify = issue['user_notify']
                     description = payload['object_attributes']['description']
-                    email_match = re.match(issue['user_notify'], description)
-                    if email_match and private_token:
-                        email = email_match.group(1)
-                        a = GitlabApi(repo_meta['homepage'], private_token)
-                        username = a.lookup_username(email)
-                        if username:
-                            project_id = payload['object_attributes']['project_id']
-                            issue_id = payload['object_attributes']['id']
-                            a.comment_on_issue(project_id, issue_id, "Automatic mention for @%s" % username)
+                    usernames = []
+                    for n in notify:
+                        username_match = re.match("^@[a-zA-Z0-9_.+-]+$", n)
+                        if username_match:
+                            # simple username
+                            usernames.append(n)
+                        else:
+                            # try to pull the email from the issue body
+                            # and derive the username from that
+                            body_match = re.match(n, description)
+                            if body_match and private_token:
+                                email = body_match.group(1)
+                                username = gl.lookup_username(email)
+                                if username:
+                                    usernames.append("@" + username)
+                    # narrow down to unique names
+                    usernames = list(set(usernames))
+                    if len(usernames) > 0:
+                        project_id = payload['object_attributes']['project_id']
+                        issue_id = payload['object_attributes']['id']
+                        gl.comment_on_issue(project_id, issue_id, "Automatic mention for %s" % (" and ".join(usernames)))
 
             return 'OK'
 
