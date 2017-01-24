@@ -62,7 +62,7 @@ def index():
                 if branch:
                     branch_actions = branch.get("actions", None)
 
-                    if branch_action:
+                    if branch_actions:
                         for action in branch_actions:
                             try:
                                 subp = subprocess.Popen(action, cwd=branch.get("path", "."), shell=True)
