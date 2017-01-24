@@ -25,13 +25,13 @@ Create a JSON config file (e.g., `repos.json`) to configure repositories. Each r
         "push": {
             "master": {
                 "path": "/home/spm-batching/deploy",
-                "action": [
+                "actions": [
                   "git checkout master",
                   "git pull"
                 ]
             },
             "other": {
-            	"action": [
+            	"actions": [
             		"echo A non-master branch was pushed."
             	]
             }
