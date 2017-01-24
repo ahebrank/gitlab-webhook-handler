@@ -3,7 +3,7 @@
         "push": {
             "master": {
                 "path": "/home/puppet",
-                "action": [
+                "actions": [
                   "git checkout master",
                   "git pull"
                 ]
