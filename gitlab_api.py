@@ -1,7 +1,6 @@
 from urlparse import urlparse
 import requests
 import json
-
 class GitlabApi:
     base_url = None
     token = None
@@ -23,6 +22,10 @@ class GitlabApi:
         r = requests.post(self.get_url(endpoint), data=data)
         return r.ok
 
+    def put(self, endpoint, data):
+        r = requests.put(self.get_url(endpoint), data=data)
+        return r.ok
+
     def get(self, endpoint):
         r = requests.get(self.get_url(endpoint))
         return json.loads(r.text)
@@ -36,7 +39,31 @@ class GitlabApi:
     def comment_on_issue(self, project_id, issue_id, comment):
         data = {
             'id': project_id,
-            'issue_id': issue_id,
+            'issue_iid': issue_id,
             'body': comment
         }
-        return self.post("/projects/{id}/issues/{issue_id}/notes".format(**data), data)
+        return self.post("/projects/{id}/issues/{issue_iid}/notes".format(**data), data)
+
+    def set_issue_labels(self, project_id, issue_id, labels):
+        data = {
+            'id': project_id,
+            'issue_iid': issue_id,
+            'labels': ','.join(labels)
+        }
+        return self.put("/projects/{id}/issues/{issue_iid}".format(**data), data)
+
+    def get_issue(self, project_id, issue_id):
+        data = {
+            'id': project_id,
+            'issue_iid': issue_id
+        }
+        return self.get("/projects/{id}/issues/{issue_iid}".format(**data))
+
+    def get_labels(self, project_id):
+        labels = self.get("/projects/{id}/labels".format(id=project_id))
+        return labels
+
+    def get_boards(self, project_id):
+        return self.get("/projects/{id}/boards".format(id=project_id))
+
+

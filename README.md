@@ -41,17 +41,19 @@ Create a JSON config file (e.g., `repos.json`) to configure repositories. Each r
             "user_notify": [
                 "\\*\\*Sender\\*\\*\\: ([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+)",
                 "@gitlabuser"
-            ]
+            ],
+            "labels": []
         }
     }
 }
 
 ```
 
-This example handles two types of webhooks.  
+This example handles several types of webhooks.  
 
-1. After a push event to the repo `master` branch, it executes a couple of command in the local shell to pull in the master HEAD. The special branch key `other` will run if the pushed branch is not otherwise matched to a key in the `push` hash.
-2. After a new issue event, the handler runs a regex match on the issue body and adds an issue comment to @mention the user by email.
+1. `push`: After a push event to the repo `master` branch, it executes a couple of command in the local shell to pull in the master HEAD. The special branch key `other` will run if the pushed branch is not otherwise matched to a key in the `push` hash.
+2. `issue.user_notify`: After a new issue event, the handler runs a regex match on the issue body and adds an issue comment to @mention the user by email.
+3. `issue.labels`: Parse the commit message to handle adding or removing labels based on commit messages. For instance, "address #53, #72: carousel accessibility fixes; -browser compat, +accessibility, ~Pending" will add an "accessibility" label (if it already exists for the project) to issues 53 and 72, remove label "browser compat", and add label "Pending" (presumably a list label) while removing other list labels (effectively moving an issue on the Gitlab boards kanban).
 
 The issue hook uses a Gitlab private token to run API commands to lookup a username by email and add an issue comment. The push hook does not require the private token because it does not use the Gitlab API.
 
