@@ -9,7 +9,7 @@ class GitlabApi:
     def __init__(self, homepage, token):
         self.token = token
         o = urlparse(homepage)
-        self.base_url = o.scheme + "://" + o.netloc + "/api/v3/"
+        self.base_url = o.scheme + "://" + o.netloc + "/api/v4/"
 
     def get_url(self, endpoint):
         if '?' in endpoint:
@@ -21,7 +21,7 @@ class GitlabApi:
 
     def post(self, endpoint, data):
         r = requests.post(self.get_url(endpoint), data=data)
-        return json.loads(r.text)
+        return r.ok
 
     def get(self, endpoint):
         r = requests.get(self.get_url(endpoint))
@@ -31,7 +31,7 @@ class GitlabApi:
         users = self.get("/users?search=" + email)
         if len(users) == 1:
             return users[0]['username']
-        return False;
+        return False
 
     def comment_on_issue(self, project_id, issue_id, comment):
         data = {
@@ -39,5 +39,4 @@ class GitlabApi:
             'issue_id': issue_id,
             'body': comment
         }
-
         return self.post("/projects/{id}/issues/{issue_id}/notes".format(**data), data)
