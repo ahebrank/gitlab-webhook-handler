@@ -10,6 +10,7 @@ import ipaddress
 from flask import Flask, request, abort
 import argparse
 from gitlab_api import GitlabApi
+from helpers import Helpers
 
 app = Flask(__name__)
 
@@ -40,7 +41,6 @@ def index():
             repo_meta = {
                 'homepage': payload['repository']['homepage'],
             }
-
             repo = repos.get(repo_meta['homepage'], None)
             private_token = repo.get('private_token', None)
 
@@ -103,6 +103,21 @@ def index():
                         issue_id = payload['object_attributes']['id']
                         gl.comment_on_issue(project_id, issue_id, "Automatic mention for %s" % (" and ".join(usernames)))
 
+                # parse commit message and manage labels on issues
+                if issue.get("labels")
+                    if not private_token:
+                        abort(403)
+                    gl = GitlabApi(repo_meta['homepage'], private_token)
+                    helpers = Helpers()
+                    project_id = payload['object_attributes']['project_id']
+                    labels = helpers.get_label_names(gl.get_labels(project_id))
+                    list_labels = helpers.get_list_labels(gl.get_boards(project_id))
+                    for commit in payload['commits']:
+                        parse_commit = helpers.parse_commit_labels(commit['message'])
+                        for issue in parse_commit['issues']:
+                            issue_labels = gl.get_issue(project_id, issue)
+                            updated_labels = helpers.simplify_labels(issue_labels, parse_commit['label_ops'])
+                            gl.set_issue_labels(project_id, issue, updated_labels)
             return 'OK'
 
         # unknown event type
@@ -110,16 +125,17 @@ def index():
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description="gitlab webhook receiver")
-    parser.add_argument("-c", "--config", action="store", help="path to repos configuration", required=True)
-    parser.add_argument("-p", "--port", action="store", help="server port", required=False, default=8080)
-    parser.add_argument("--allow", action="store", help="whitelist Gitlab IP block", required=False, default=None)
-    parser.add_argument("--debug", action="store_true", help="enable debug output", required=False, default=False)
-    
+    parser.add_argument("-c", "--config", action="store", 
+                        help="path to repos configuration", required=True)
+    parser.add_argument("-p", "--port", action="store", help="server port", 
+                        required=False, default=8080)
+    parser.add_argument("--allow", action="store", help="whitelist Gitlab IP block", 
+                        required=False, default=None)
+    parser.add_argument("--debug", action="store_true", help="enable debug output", 
+                        required=False, default=False)
 
     args = parser.parse_args()
-
     port_number = int(args.port)
 
     REPOS_JSON_PATH = args.config
