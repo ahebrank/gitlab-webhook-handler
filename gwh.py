@@ -104,7 +104,7 @@ def index():
                         gl.comment_on_issue(project_id, issue_id, "Automatic mention for %s" % (" and ".join(usernames)))
 
                 # parse commit message and manage labels on issues
-                if issue.get("labels")
+                if issue.get("labels"):
                     if not private_token:
                         abort(403)
                     gl = GitlabApi(repo_meta['homepage'], private_token)
