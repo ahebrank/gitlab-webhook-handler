@@ -42,7 +42,6 @@ def index():
                 'homepage': payload['repository']['homepage'],
             }
             repo = repos.get(repo_meta['homepage'], None)
-            private_token = repo.get('private_token', None)
 
         if not repo:
             return "Nothing to do for " + repo_meta['homepage']
@@ -74,6 +73,7 @@ def index():
         if payload['object_kind'] == "issue":
             issue = repo.get("issue", None)
             if issue:
+                private_token = repo.get('private_token', None)
                 # notification for new issue
                 if issue.get("user_notify", None) and payload['object_attributes']['action'] == "open":
                     if not private_token:
