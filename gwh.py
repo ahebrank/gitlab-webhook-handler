@@ -45,14 +45,14 @@ def index():
             private_token = repo.get('private_token', None)
 
         if not repo:
-            return json.dumps({'error': "nothing to do for " + str(repo_meta)})
+            return "Nothing to do for " + repo_meta['homepage']
 
         if payload['object_kind'] == "push":
             match = re.match(r"refs/heads/(?P<branch>.*)", payload['ref'])
             if match:
                 repo_meta['branch'] = match.groupdict()['branch']
             else:
-                return json.dumps({'error': "unable to determine pushed branch"})
+                return "Unable to determine pushed branch"
 
             push = repo.get("push", None)
             if push:
@@ -121,7 +121,7 @@ def index():
             return 'OK'
 
         # unknown event type
-        return json.dumps({'error': "wrong event type"})
+        return "Wrong event type", 400
 
 
 if __name__ == "__main__":
