@@ -68,7 +68,7 @@ def index():
                                 subp = subprocess.Popen(action, cwd=branch.get("path", "."), shell=True)
                                 subp.wait()
                             except Exception as e:
-                                print e
+                                print(e)
             return 'OK'
 
         if payload['object_kind'] == "issue":
@@ -142,7 +142,7 @@ if __name__ == "__main__":
     try:
         repos = json.loads(io.open(REPOS_JSON_PATH, 'r').read())
     except:
-        print "Error opening repos file %s -- check file exists and is valid json" % REPOS_JSON_PATH
+        print("Error opening repos file %s -- check file exists and is valid json" % REPOS_JSON_PATH)
         raise
 
     if args.allow:
