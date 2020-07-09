@@ -42,6 +42,8 @@ def index():
                 'homepage': payload['repository']['homepage'],
             }
             repo = repos.get(repo_meta['homepage'], None)
+        else:
+            return "Unsupported object kind", 501
 
         if not repo:
             return "Nothing to do for " + repo_meta['homepage']
@@ -119,10 +121,6 @@ def index():
                             updated_labels = helpers.simplify_labels(issue_labels, parse_commit['label_ops'])
                             gl.set_issue_labels(project_id, issue, updated_labels)
             return 'OK'
-
-        # unknown event type
-        return "Wrong event type", 400
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="gitlab webhook receiver")
