@@ -1,3 +1,4 @@
-repos.json
+repos.json*
+!repos.json.example
 test.py
 *.pyc

@@ -21,7 +21,8 @@ Create a JSON config file (e.g., `repos.json`) to configure repositories. Each r
 ```json
 {
     "https://gitlab.com/pal/spm-batching": {
-    	"private_token": "xxxxxxxxxxxxx",
+        "private_token": "xxxxxxxxxxxxx",
+        "webhook_token": "xxxxxxxxxxxxx",
         "push": {
             "master": {
                 "path": "/home/spm-batching/deploy",
@@ -55,7 +56,9 @@ This example handles several types of webhooks.
 2. `issue.user_notify`: After a new issue event, the handler runs a regex match on the issue body and adds an issue comment to @mention the user by email.
 3. `issue.labels`: Parse the commit message to handle adding or removing labels based on commit messages. For instance, "address #53, #72: carousel accessibility fixes; -browser compat, +accessibility, ~Pending" will add an "accessibility" label (if it already exists for the project) to issues 53 and 72, remove label "browser compat", and add label "Pending" (presumably a list label) while removing other list labels (effectively moving an issue on the Gitlab boards kanban).
 
-The issue hook uses a Gitlab private token to run API commands to lookup a username by email and add an issue comment. The push hook does not require the private token because it does not use the Gitlab API.
+The issue hook uses a [Gitlab personal access token](https://docs.gitlab.com/ee/api/#personal-access-tokens) (`private_token`) to run API commands to lookup a username by email and add an issue comment. The push hook does not require the private token because it does not use the Gitlab API.
+
+`webhook_token` allows authorization by matching against a [secret token included in the payload headers](https://docs.gitlab.com/ce/user/project/integrations/webhooks.html#secret-token).
 
 ### Run
 

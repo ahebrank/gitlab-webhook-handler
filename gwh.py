@@ -42,11 +42,19 @@ def index():
                 'homepage': payload['repository']['homepage'],
             }
             repo = repos.get(repo_meta['homepage'], None)
+            private_token = repo.get('private_token', None)
+            webhook_token = repo.get('webhook_token', None)
         else:
             return "Unsupported object kind", 501
 
         if not repo:
             return "Nothing to do for " + repo_meta['homepage']
+
+        if webhook_token:
+            # validate against X-Gitlab-Token header
+            request_token = request.headers.get('X-Gitlab-Token', None)
+            if not request_token or request_token != webhook_token:
+                abort(403)
 
         if payload['object_kind'] == "push":
             match = re.match(r"refs/heads/(?P<branch>.*)", payload['ref'])
