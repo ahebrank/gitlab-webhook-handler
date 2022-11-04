@@ -42,17 +42,18 @@ def index():
                 'homepage': payload['repository']['homepage'],
             }
             repo = repos.get(repo_meta['homepage'], None)
-            private_token = repo.get('private_token', None)
+        else:
+            return "Unsupported object kind", 501
 
         if not repo:
-            return json.dumps({'error': "nothing to do for " + str(repo_meta)})
+            return "Nothing to do for " + repo_meta['homepage']
 
         if payload['object_kind'] == "push":
             match = re.match(r"refs/heads/(?P<branch>.*)", payload['ref'])
             if match:
                 repo_meta['branch'] = match.groupdict()['branch']
             else:
-                return json.dumps({'error': "unable to determine pushed branch"})
+                return "Unable to determine pushed branch"
 
             push = repo.get("push", None)
             if push:
@@ -68,12 +69,13 @@ def index():
                                 subp = subprocess.Popen(action, cwd=branch.get("path", "."), shell=True)
                                 subp.wait()
                             except Exception as e:
-                                print e
+                                print(e)
             return 'OK'
 
         if payload['object_kind'] == "issue":
             issue = repo.get("issue", None)
             if issue:
+                private_token = repo.get('private_token', None)
                 # notification for new issue
                 if issue.get("user_notify", None) and payload['object_attributes']['action'] == "open":
                     if not private_token:
@@ -120,10 +122,6 @@ def index():
                             gl.set_issue_labels(project_id, issue, updated_labels)
             return 'OK'
 
-        # unknown event type
-        return json.dumps({'error': "wrong event type"})
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="gitlab webhook receiver")
     parser.add_argument("-c", "--config", action="store", 
@@ -142,7 +140,7 @@ if __name__ == "__main__":
     try:
         repos = json.loads(io.open(REPOS_JSON_PATH, 'r').read())
     except:
-        print "Error opening repos file %s -- check file exists and is valid json" % REPOS_JSON_PATH
+        print("Error opening repos file %s -- check file exists and is valid json" % REPOS_JSON_PATH)
         raise
 
     if args.allow:
