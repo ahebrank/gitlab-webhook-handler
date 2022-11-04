@@ -1,6 +1,6 @@
 # Flask webhook for Gitlab
 
-A very simple post-receive web hook handler.
+A very simple post-receive web hook handler for Gitlab based on a project for Github: [razius/github-webhook-handler](https://github.com/razius/github-webhook-handler)
 
 It will optionally verify that the POST request originated from a particular IP address.
 
