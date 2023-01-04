@@ -42,13 +42,13 @@ def index():
                 'homepage': payload['repository']['homepage'],
             }
             repo = repos.get(repo_meta['homepage'], None)
-            private_token = repo.get('private_token', None)
+            if not repo:
+                return "Nothing to do for " + repo_meta['homepage']
+
             webhook_token = repo.get('webhook_token', None)
+            private_token = repo.get('private_token', None)
         else:
             return "Unsupported object kind", 422
-
-        if not repo:
-            return "Nothing to do for " + repo_meta['homepage']
 
         if webhook_token:
             # validate against X-Gitlab-Token header
@@ -83,7 +83,6 @@ def index():
         if payload['object_kind'] == "issue":
             issue = repo.get("issue", None)
             if issue:
-                private_token = repo.get('private_token', None)
                 # notification for new issue
                 if issue.get("user_notify", None) and payload['object_attributes']['action'] == "open":
                     if not private_token:
@@ -101,7 +100,7 @@ def index():
                             # try to pull the email from the issue body
                             # and derive the username from that
                             body_match = re.match(n, description)
-                            if body_match and private_token:
+                            if body_match:
                                 email = body_match.group(1)
                                 username = gl.lookup_username(email)
                                 if username:
