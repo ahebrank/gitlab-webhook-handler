@@ -45,7 +45,7 @@ def index():
             private_token = repo.get('private_token', None)
             webhook_token = repo.get('webhook_token', None)
         else:
-            return "Unsupported object kind", 501
+            return "Unsupported object kind", 422
 
         if not repo:
             return "Nothing to do for " + repo_meta['homepage']
