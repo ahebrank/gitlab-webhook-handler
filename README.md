@@ -6,12 +6,10 @@ It will optionally verify that the POST request originated from a particular IP 
 
 ## Getting started
 
-### Installation Requirements
-
-Install dependencies found in ``requirements.txt``.
+### Installation
 
 ```bash
-pip install -r requirements.txt
+pip install .
 ```
 
 ### Repository Configuration
@@ -62,7 +60,7 @@ The issue hook uses a [GitLab personal access token](https://docs.gitlab.com/ee/
 ### Run
 
 ```
-python gwh.py --help
+python -m gwh --help
 ```
 
 ## Example usage:
@@ -72,7 +70,7 @@ Assume a self-hosted GitLab server on 192.168.1.44 and a production webserver on
 On your webhost (192.168.1.99), bring up the webhook handler:
 
 ```
-python gwh.py -c repos.json -p 8080 --allow 192.168.1.44 &
+python -m gwh -p 8080 --allow 192.168.1.44 repos.json &
 ```
 
 Then in your GitLab server (on 192.168.1.44) project settings, create a new webhook with URL http://192.168.1.99:8080 that's triggered on push events.

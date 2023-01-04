@@ -1,4 +1,6 @@
 repos.json*
 !repos.json.example
-test.py
 *.pyc
+/build/
+/dist/
+/gitlab_webhook_handler.egg-info/

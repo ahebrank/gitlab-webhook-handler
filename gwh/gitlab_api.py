@@ -1,6 +1,7 @@
 from urllib.parse import urlparse
 import requests
 import json
+
 class GitlabApi:
     base_url = None
     token = None
