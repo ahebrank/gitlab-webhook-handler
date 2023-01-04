@@ -23,14 +23,14 @@ def index():
     if request.method == "GET":
         return 'OK'
     elif request.method == "POST":
-        # Store the IP address of the requester
-        request_ip = ipaddress.ip_address(u'{0}'.format(request.remote_addr))
-
         # Check the POST source
         if not WHITELIST_IP is None:
+            # Store the IP address of the requester
+            request_ip = ipaddress.ip_address(request.remote_addr)
+
             for block in [WHITELIST_IP]:
-                if ipaddress.ip_address(request_ip) in ipaddress.ip_network(block):
-                    break  # the remote_addr is within the network range of github.
+                if request_ip in ipaddress.ip_network(block):
+                    break # remote_addr is within the accepted network range
             else:
                 abort(403)
 
@@ -151,10 +151,8 @@ if __name__ == "__main__":
         print("Error opening repos file %s -- check file exists and is valid json" % REPOS_JSON_PATH)
         raise
 
-    if args.allow:
-        WHITELIST_IP = unicode(args.allow, "utf-8")
+    WHITELIST_IP = args.allow
 
-    if args.debug:
-        app.debug = True
+    app.debug = args.debug
 
     app.run(host="0.0.0.0", port=port_number)
