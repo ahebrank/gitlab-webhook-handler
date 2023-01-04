@@ -6,8 +6,8 @@
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Run gitlab webhook handler
-# Description:       Run the gitlab webhook handler as a service
+# Short-Description: Run GitLab webhook handler
+# Description:       Run the GitLab webhook handler as a service
 ### END INIT INFO
 
 # Change the following to the location of the gitlab-webhook-handler directory
