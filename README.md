@@ -80,4 +80,4 @@ Then in your Gitlab server (on 192.168.1.44) project settings, create a new webh
 
 ## Test
 
-	curl -i -X POST -H "Content-Type: application/json" --data "@test.json" localhost:808
+	curl -i -X POST -H "Content-Type: application/json" --data "@test.json" localhost:8080
