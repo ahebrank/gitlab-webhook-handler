@@ -132,13 +132,13 @@ def index():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="gitlab webhook receiver")
-    parser.add_argument("-c", "--config", action="store", 
+    parser.add_argument("-c", "--config", action="store",
                         help="path to repos configuration", required=True)
-    parser.add_argument("-p", "--port", action="store", help="server port", 
+    parser.add_argument("-p", "--port", action="store", help="server port",
                         required=False, default=8080)
-    parser.add_argument("--allow", action="store", help="whitelist Gitlab IP block", 
+    parser.add_argument("--allow", action="store", help="whitelist Gitlab IP block",
                         required=False, default=None)
-    parser.add_argument("--debug", action="store_true", help="enable debug output", 
+    parser.add_argument("--debug", action="store_true", help="enable debug output",
                         required=False, default=False)
 
     args = parser.parse_args()

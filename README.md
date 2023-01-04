@@ -32,12 +32,12 @@ Create a JSON config file (e.g., `repos.json`) to configure repositories. Each r
                 ]
             },
             "other": {
-            	"actions": [
-            		"echo A non-master branch was pushed."
-            	]
+                "actions": [
+                    "echo A non-master branch was pushed."
+                ]
             }
         }
-        },
+    },
         "issue": {
             "user_notify": [
                 "\\*\\*Sender\\*\\*\\: ([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+)",
@@ -47,10 +47,9 @@ Create a JSON config file (e.g., `repos.json`) to configure repositories. Each r
         }
     }
 }
-
 ```
 
-This example handles several types of webhooks.  
+This example handles several types of webhooks.
 
 1. `push`: After a push event to the repo `master` branch, it executes a couple of command in the local shell to pull in the master HEAD. The special branch key `other` will run if the pushed branch is not otherwise matched to a key in the `push` hash.
 2. `issue.user_notify`: After a new issue event, the handler runs a regex match on the issue body and adds an issue comment to @mention the user by email.
@@ -80,4 +79,7 @@ Then in your Gitlab server (on 192.168.1.44) project settings, create a new webh
 
 ## Test
 
-	curl -i -X POST -H "Content-Type: application/json" --data "@test.json" localhost:808
+```
+curl -i -X POST -H "Content-Type: application/json" --data "@test.json" http://localhost:8080
+```
+
