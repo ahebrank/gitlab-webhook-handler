@@ -34,7 +34,13 @@ def index():
             else:
                 abort(403)
 
-        payload = json.loads(request.data)
+        if not len(request.data):
+            abort(400)
+
+        try:
+            payload = json.loads(request.data)
+        except:
+            abort(400)
 
         # common for events
         if payload['object_kind'] in ['push', 'issue']:
