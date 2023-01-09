@@ -11,7 +11,7 @@ app = Flask(__name__)
 whitelist_ip = None
 repos = None
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/", methods=['GET', 'POST'], strict_slashes=False)
 def index():
     if request.method == "GET":
         return 'OK'
