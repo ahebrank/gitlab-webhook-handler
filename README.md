@@ -9,7 +9,7 @@ It will optionally verify that the POST request originated from a particular IP 
 ### Installation
 
 ```bash
-pip install .
+pip install gwh
 ```
 
 ### Repository Configuration
