@@ -2,7 +2,7 @@ import os
 from setuptools import setup
 
 setup(
-    name="Gitlab Webook Handler",
+    name="gwh",
     author='Andy Hebrank',
     author_email='ahebrank@gmail.com',
     packages=['gwh'],
