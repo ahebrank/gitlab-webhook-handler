@@ -1,0 +1,33 @@
+on: [push, pull_request]
+
+jobs:
+  publish:
+    name: build and publish to pypi
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+
+      - name: install dependencies & build
+        run: |
+          pip3 install setuptools build wheel
+          python3 setup.py sdist bdist_wheel
+
+      - name: publish to Test PyPi
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip_existing: true
+          user: __token__
+          password: ${{ secrets.TEST_PYPI_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
+
+      - name: publish to PyPi
+        if: startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}
