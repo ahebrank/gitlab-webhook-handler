@@ -1,21 +1,14 @@
-#!/usr/bin/env python
-import io
-import os
 import re
-import sys
 import json
 import subprocess
-import requests
 import ipaddress
 from flask import Flask, request, abort
-import argparse
-from gitlab_api import GitlabApi
-from helpers import Helpers
+from .gitlab_api import GitlabApi
+from .helpers import Helpers
 
 app = Flask(__name__)
 
-REPOS_JSON_PATH = None
-WHITELIST_IP = None
+whitelist_ip = None
 repos = None
 
 @app.route("/", methods=['GET', 'POST'])
@@ -24,11 +17,11 @@ def index():
         return 'OK'
     elif request.method == "POST":
         # Check the POST source
-        if not WHITELIST_IP is None:
+        if not whitelist_ip is None:
             # Store the IP address of the requester
             request_ip = ipaddress.ip_address(request.remote_addr)
 
-            for block in [WHITELIST_IP]:
+            for block in [whitelist_ip]:
                 if request_ip in ipaddress.ip_network(block):
                     break # remote_addr is within the accepted network range
             else:
@@ -135,29 +128,3 @@ def index():
                             gl.set_issue_labels(project_id, issue, updated_labels)
             return 'OK'
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="GitLab webhook receiver")
-    parser.add_argument("-c", "--config", action="store",
-                        help="path to repos configuration", required=True)
-    parser.add_argument("-p", "--port", action="store", help="server port",
-                        required=False, default=8080)
-    parser.add_argument("--allow", action="store", help="whitelist GitLab IP block",
-                        required=False, default=None)
-    parser.add_argument("--debug", action="store_true", help="enable debug output",
-                        required=False, default=False)
-
-    args = parser.parse_args()
-    port_number = int(args.port)
-
-    REPOS_JSON_PATH = args.config
-    try:
-        repos = json.loads(io.open(REPOS_JSON_PATH, 'r').read())
-    except:
-        print("Error opening repos file %s -- check file exists and is valid json" % REPOS_JSON_PATH)
-        raise
-
-    WHITELIST_IP = args.allow
-
-    app.debug = args.debug
-
-    app.run(host="0.0.0.0", port=port_number)
