@@ -1,14 +1,8 @@
 import os
-from distutils.core import setup
-
-about = {}
-here = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(here,'gwh', '__version__.py'), encoding='utf-8') as f:
-    exec(f.read(), about)
+from setuptools import setup
 
 setup(
-    name=about['__title__'],
-    version=about['__version__'],
+    name="Gitlab Webook Handler",
     author='Andy Hebrank',
     author_email='ahebrank@gmail.com',
     packages=['gwh'],
