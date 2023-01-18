@@ -3,6 +3,7 @@ from setuptools import setup
 
 setup(
     name="gwh",
+    version="develop",
     author='Andy Hebrank',
     author_email='ahebrank@gmail.com',
     packages=['gwh'],
