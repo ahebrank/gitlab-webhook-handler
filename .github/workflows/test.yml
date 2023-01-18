@@ -1,0 +1,26 @@
+on: [push, pull_request]
+
+jobs:
+  publish:
+    name: build and publish to testpypi
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install, test cli
+        run: |
+          pip3 install .
+          python3 -m gwh --help
+
+      - name: install dependencies & build
+        run: |
+          pip3 install setuptools wheel
+          python3 setup.py sdist bdist_wheel
+
+      - name: publish to Test PyPi
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip_existing: true
+          user: __token__
+          password: ${{ secrets.TEST_PYPI_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/

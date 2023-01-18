@@ -15,25 +15,22 @@ jobs:
         run: |
           # from refs/tags/1.2.3 get 1.2.3
           VERSION=$( basename $GITHUB_REF )
-          PLACEHOLDER='version="develop"'
-          VERSION_FILE='setup.py'
+          PLACEHOLDER='__version__ = "0.0.0"'
+          VERSION_FILE='gwh/__version__.py'
           # fail out if placeholder not found
           grep "$PLACEHOLDER" "$VERSION_FILE"
-          sed -i "s/$PLACEHOLDER/version=\"${VERSION}\"/" "$VERSION_FILE"
+          sed -i "s/$PLACEHOLDER/__version__ = \"${VERSION}\"/" "$VERSION_FILE"
         shell: bash
+
+      - name: install, test cli
+        run: |
+          pip3 install .
+          python3 -m gwh --help
 
       - name: install dependencies & build
         run: |
           pip3 install setuptools wheel
           python3 setup.py sdist bdist_wheel
-
-      - name: publish to Test PyPi
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          skip_existing: true
-          user: __token__
-          password: ${{ secrets.TEST_PYPI_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
 
       - name: publish to PyPi
         if: startsWith(github.ref, 'refs/tags')
