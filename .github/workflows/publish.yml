@@ -1,4 +1,7 @@
-on: [push, pull_request]
+on:
+  push:
+    tags:
+      - '*.*.*'
 
 jobs:
   publish:
@@ -11,9 +14,10 @@ jobs:
         if: startsWith(github.ref, 'refs/tags')
         run: |
           # from refs/tags/1.2.3 get 1.2.3
-          VERSION=$(echo $GITHUB_REF | sed 's#.*/##')
+          VERSION=$( basename $GITHUB_REF )
           PLACEHOLDER='version="develop"'
           VERSION_FILE='setup.py'
+          # fail out if placeholder not found
           grep "$PLACEHOLDER" "$VERSION_FILE"
           sed -i "s/$PLACEHOLDER/version=\"${VERSION}\"/" "$VERSION_FILE"
         shell: bash
