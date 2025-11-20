@@ -17,11 +17,11 @@ class Helpers:
 
     def parse_commit_labels(self, message, labels):
         # get the issue numbers
-        issue_pat = re.compile('#(\d+)')
+        issue_pat = re.compile(r'#(\d+)')
         iid_match = issue_pat.findall(message)
         
         # get the labels
-        label_pat = re.compile('([\~\+\-])(' + '|'.join(labels) + ')')
+        label_pat = re.compile(r'([\~\+\-])(' + '|'.join(labels) + ')')
         label_match = label_pat.findall(message)
         return {
             'issues': iid_match,
