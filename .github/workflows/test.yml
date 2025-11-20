@@ -5,7 +5,7 @@ jobs:
     name: build and publish to testpypi
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
 
       - name: install, test cli
         run: |
@@ -14,8 +14,8 @@ jobs:
 
       - name: install dependencies & build
         run: |
-          pip3 install setuptools wheel
-          python3 setup.py sdist bdist_wheel
+          pip3 install build
+          python3 -m build
 
       - name: publish to Test PyPi
         uses: pypa/gh-action-pypi-publish@release/v1

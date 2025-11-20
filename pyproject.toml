@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=40.6.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gwh"
+version = "1.1.0"
+description = "Webhook Handler for GitLab"
+readme = "README.md"
+authors = [
+  { name = "Andy Hebrank", email = "ahebrank@gmail.com" }
+]
+license = "Apache-2.0"
+requires-python = ">=3.8"
+dependencies = [
+  "Flask>=1.0",
+  "requests>=2.19.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/ahebrank/gitlab-webhook-handler"
+Repository = "https://github.com/ahebrank/gitlab-webhook-handler.git"
+Issues = "https://github.com/ahebrank/gitlab-webhook-handler/issues"
+
+[tool.setuptools]
+packages = ["gwh"]
+
+[tool.setuptools.package-data]
+gwh = ["repos.json.example"]
+
+[project.scripts]
+gwh = "gwh.__main__:main"

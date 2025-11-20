@@ -1,14 +1,17 @@
 import argparse
 import json
 
-from .__version__ import (
-    __package__,
-    __version__
-)
+from importlib.metadata import version, PackageNotFoundError
+
+try:
+    __version__ = version("gwh")
+except PackageNotFoundError:
+    __version__ = "unknown"
+
 from gwh import app
 import gwh
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(prog="python -m gwh", description="GitLab webhook handler")
     parser.add_argument("config", help="path to repos configuration")
     parser.add_argument("--version", action="version", version=__package__ + " " + __version__)
@@ -30,3 +33,6 @@ if __name__ == "__main__":
     app.debug = args.debug
 
     app.run(host=args.host, port=args.port)
+
+if __name__ == "__main__":
+    main()

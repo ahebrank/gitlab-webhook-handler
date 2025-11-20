@@ -8,19 +8,7 @@ jobs:
     name: build and publish to pypi
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Set version from tag
-        if: startsWith(github.ref, 'refs/tags')
-        run: |
-          # from refs/tags/1.2.3 get 1.2.3
-          VERSION=$( basename $GITHUB_REF )
-          PLACEHOLDER='__version__ = "0.0.0"'
-          VERSION_FILE='gwh/__version__.py'
-          # fail out if placeholder not found
-          grep "$PLACEHOLDER" "$VERSION_FILE"
-          sed -i "s/$PLACEHOLDER/__version__ = \"${VERSION}\"/" "$VERSION_FILE"
-        shell: bash
+      - uses: actions/checkout@v5
 
       - name: install, test cli
         run: |
@@ -29,8 +17,8 @@ jobs:
 
       - name: install dependencies & build
         run: |
-          pip3 install setuptools wheel
-          python3 setup.py sdist bdist_wheel
+          pip3 install build
+          python3 -m build
 
       - name: publish to PyPi
         if: startsWith(github.ref, 'refs/tags')
