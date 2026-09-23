@@ -121,10 +121,11 @@ def index():
                     labels = helpers.get_label_names(gl.get_labels(project_id))
                     list_labels = helpers.get_list_labels(gl.get_boards(project_id))
                     for commit in payload['commits']:
-                        parse_commit = helpers.parse_commit_labels(commit['message'])
+                        parse_commit = helpers.parse_commit_labels(commit['message'], labels)
                         for issue in parse_commit['issues']:
-                            issue_labels = gl.get_issue(project_id, issue)
-                            updated_labels = helpers.simplify_labels(issue_labels, parse_commit['label_ops'])
+                            issue_json = gl.get_issue(project_id, issue)
+                            existing_labels = helpers.get_issue_labels(issue_json)
+                            updated_labels = helpers.simplify_labels(existing_labels, parse_commit, list_labels)
                             gl.set_issue_labels(project_id, issue, updated_labels)
             return 'OK'
 
