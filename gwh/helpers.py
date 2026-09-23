@@ -32,7 +32,7 @@ class Helpers:
         labels = existing
         for ops in from_message['label_ops']:
             op = ops[0]
-            name = ops[1].decode('utf-8')
+            name = ops[1]
             if op == '+':
                 labels.append(name)
             if op == '-':
